@@ -1,0 +1,5 @@
+name: MultiWorldSignPortals
+version: 0.1
+author: giuliojiang
+main: ovh.jstudios.multiworld.signportals.Main
+api-version: 1.13
