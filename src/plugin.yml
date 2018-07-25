@@ -3,3 +3,7 @@ version: 0.1
 author: giuliojiang
 main: ovh.jstudios.multiworld.signportals.Main
 api-version: 1.13
+commands:
+   mwsign:
+      description: Gives yourself a charge to enable a sign as a portal. When you have a charge, right-click a sign to enable it as portal
+      usage: /mwsign
