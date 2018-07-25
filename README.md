@@ -1,5 +1,9 @@
 # Spigot-MultiWorldSignPortals
 
+Requires https://www.spigotmc.org/resources/multiworld.4598/
+
+Developed on SpigotAPI 1.13, so fully Minecraft 1.13-ready!
+
 ## Commands
 
 ```
