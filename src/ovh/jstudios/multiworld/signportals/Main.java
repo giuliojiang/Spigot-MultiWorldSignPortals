@@ -38,7 +38,7 @@ public class Main extends JavaPlugin {
     private void initListeners() {
 
         PluginManager pluginManager = server.getPluginManager();
-        pluginManager.registerEvents(new SignBlockInteractListener(logger, this, chargedPlayers), this);
+        pluginManager.registerEvents(new SignBlockInteractListener(chargedPlayers), this);
 
     }
 

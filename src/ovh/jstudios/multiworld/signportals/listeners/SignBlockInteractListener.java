@@ -1,35 +1,27 @@
 package ovh.jstudios.multiworld.signportals.listeners;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import ovh.jstudios.multiworld.signportals.EnabledPlayers;
-import ovh.jstudios.multiworld.signportals.StringConstants;
 import ovh.jstudios.multiworld.signportals.sign.SignUtilities;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 public class SignBlockInteractListener implements Listener {
 
-    private final JavaPlugin plugin;
     private final EnabledPlayers chargedPlayers;
 
-    public SignBlockInteractListener(Logger logger, JavaPlugin plugin, EnabledPlayers chargedPlayers) {
+    public SignBlockInteractListener(EnabledPlayers chargedPlayers) {
 
-        this.plugin = plugin;
         this.chargedPlayers = chargedPlayers;
 
     }
@@ -37,9 +29,40 @@ public class SignBlockInteractListener implements Listener {
     @EventHandler
     public void onSignInteract(PlayerInteractEvent event) {
 
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            handleRightClick(event);
+        }
+
+    }
+
+    // A sign portal can be destroyed only if the player has a charge
+    @EventHandler
+    public void onSignBreak(BlockBreakEvent event) {
+
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        Sign sign = SignUtilities.getSignState(block);
+        if (sign == null) {
             return;
         }
+
+        if (!SignUtilities.isPortalSign(sign)) {
+            return;
+        }
+
+        if (chargedPlayers.consumeCharge(player.getUniqueId())) {
+            player.sendMessage("Destroying this portal sign");
+        } else {
+            player.sendMessage("You cannot destroy this portal sign. If you have the permission, use /mwsign to give yourself a charge to destroy this");
+            event.setCancelled(true);
+        }
+
+    }
+
+    // Private methods ========================================================
+
+    private void handleRightClick(PlayerInteractEvent event) {
+
         Player player = event.getPlayer();
 
         boolean hasBlock = event.hasBlock();
@@ -64,6 +87,9 @@ public class SignBlockInteractListener implements Listener {
                 // Case when player isn't charged -----------------------------
                 String portalDestination = SignUtilities.getPortalDestination(sign);
                 if (portalDestination == null) {
+                    if (SignUtilities.isPartialPortalSign(sign)) {
+                        player.sendMessage("This portal is not enabled. You need to charge yourself with /mwsign and then right-click it");
+                    }
                     return;
                 }
 

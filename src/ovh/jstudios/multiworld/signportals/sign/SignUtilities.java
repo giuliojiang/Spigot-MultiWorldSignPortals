@@ -44,11 +44,9 @@ public final class SignUtilities {
 
     }
 
-    // Private methods ========================================================
-
     // A full portal sign has the [mw] header, and
     // the magic footer
-    private static boolean isPortalSign(Sign sign) {
+    public static boolean isPortalSign(Sign sign) {
 
         // Check the magic line
         String magicLine = sign.getLine(3);
@@ -62,7 +60,7 @@ public final class SignUtilities {
 
     // A partial portal sign has the [mw] header,
     // but not necessarily the magic footer
-    private static boolean isPartialPortalSign(Sign sign) {
+    public static boolean isPartialPortalSign(Sign sign) {
 
         // Check the first line
         String firstLine = sign.getLine(0);
