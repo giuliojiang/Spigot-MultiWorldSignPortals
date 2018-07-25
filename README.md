@@ -19,3 +19,5 @@ newworld
 ```
 
 Where `newworld` is the name of the destination world.
+
+More info and discussions on Spigot webpages https://www.spigotmc.org/resources/multiworld-signportals.59073/
